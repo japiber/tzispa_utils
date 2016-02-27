@@ -1,3 +1,3 @@
 Tzispa Utils
 
-Helper utilities for Tzispa framework
+Utility classes used in Tzispa framework
