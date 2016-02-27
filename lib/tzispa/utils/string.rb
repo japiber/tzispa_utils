@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 module Tzispa
   module Utils
 
     class String
 
-      NAMESPACE_SEPARATOR        = '::'.freeze
-      CLASSIFY_SEPARATOR         = '_'.freeze
-      UNDERSCORE_SEPARATOR       = '/'.freeze
+      NAMESPACE_SEPARATOR        = '::'
+      CLASSIFY_SEPARATOR         = '_'
+      UNDERSCORE_SEPARATOR       = '/'
 
-      UNDERSCORE_DIVISION_TARGET = '\1_\2'.freeze
+      UNDERSCORE_DIVISION_TARGET = '\1_\2'
 
-      def initialize(string)
-        @string = string.dup.to_s
+      def initialize(str)
+        @string = str.to_s
       end
 
       def to_s
@@ -36,11 +38,11 @@ module Tzispa
       end
 
       def self.camelize(str)
-        self.new(str).camelize!
+        self.new(str).camelize
       end
 
       def camelize
-        self.class.new( @string.split(CLASSIFY_SEPARATOR).collect!{ |w| w.capitalize }.join )
+        self.class.new( @string.split(CLASSIFY_SEPARATOR).collect{ |w| w.capitalize }.join)
       end
 
       def camelize!
@@ -48,11 +50,11 @@ module Tzispa
       end
 
       def self.underscore(str)
-        self.new(str).underscore!
+        self.new(str).underscore
       end
 
       def underscore
-        self.class.new(@string.tap { |s|
+        self.class.new(@string.dup.tap { |s|
           s.gsub!(NAMESPACE_SEPARATOR, UNDERSCORE_SEPARATOR)
           s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
           s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
