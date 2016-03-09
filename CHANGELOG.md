@@ -1,5 +1,9 @@
 Tzispa Utils
 
+## v0.2.0
+- Added urlize and transliterate to Tzispa::Utils::String
+- Make Tzispa::Utils::String a subclass of ::String for better usability
+
 ## v0.1.4
 - Added CSVFixer utility class
 
