@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'i18n'
 
 module Tzispa
@@ -10,8 +8,16 @@ module Tzispa
       NAMESPACE_SEPARATOR        = '::'
       CLASSIFY_SEPARATOR         = '_'
       UNDERSCORE_SEPARATOR       = '/'
-
+      DEFAULT_INDENT_CHAR        = ' '
       UNDERSCORE_DIVISION_TARGET = '\1_\2'
+
+      attr_accessor :indent_char
+
+      def initialize(s='')
+        super(s)
+        @indent = 0
+        @indent_char = DEFAULT_INDENT_CHAR
+      end
 
       def self.constantize(str)
         self.new(str.to_s).constantize
@@ -32,11 +38,11 @@ module Tzispa
       end
 
       def camelize
-        self.split(CLASSIFY_SEPARATOR).collect{ |w| w.capitalize }.join
+        split(CLASSIFY_SEPARATOR).collect{ |w| w.capitalize }.join
       end
 
       def camelize!
-        self.split(CLASSIFY_SEPARATOR).collect!{ |w| w.capitalize }.join
+        split(CLASSIFY_SEPARATOR).collect!{ |w| w.capitalize }.join
       end
 
       def self.underscore(str)
@@ -44,7 +50,7 @@ module Tzispa
       end
 
       def underscore
-        self.dup.tap { |s|
+        dup.tap { |s|
           s.gsub!(NAMESPACE_SEPARATOR, UNDERSCORE_SEPARATOR)
           s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
           s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
@@ -54,7 +60,7 @@ module Tzispa
       end
 
       def underscore!
-        self.tap { |s|
+        tap { |s|
           s.gsub!(NAMESPACE_SEPARATOR, UNDERSCORE_SEPARATOR)
           s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
           s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
@@ -82,14 +88,39 @@ module Tzispa
         options[:convert_spaces] ||= true
         options[:regexp] ||= /[^-_A-Za-z0-9]/
 
-        self.transliterate(options[:locale]).strip.tap { |str|
+        transliterate(options[:locale]).strip.tap { |str|
           str.downcase! if options[:downcase]
           str.gsub!(/\ /,'_') if options[:convert_spaces]
           str.gsub!(options[:regexp], '')
         }
       end
 
+      def indenter(str=nil, count=0)
+        @indent += count if count > 0
+        self.class.indentize(str&.to_s || self, @indent, @indent_char)
+      end
 
+      def unindenter(str=nil, count=0)
+        @indent -= count if count > 0 && @indent-count >= 0
+        @indent = 0 if count > 0 && @indent-count < 0
+        self.class.indentize(str&.to_s || self, @indent, @indent_char)
+      end
+
+      # Indent a string by count chars
+      def indentize(count, char = ' ')
+        gsub(/([^\n]*)(\n|$)/) do |match|
+          last_iteration = ($1 == "" && $2 == "")
+          line = ""
+          line << (char * count) unless last_iteration
+          line << $1
+          line << $2
+          line
+        end
+      end
+
+      def self.indentize(str, count, char = ' ')
+        self.new(str).indentize(count, char)
+      end
 
     end
   end
