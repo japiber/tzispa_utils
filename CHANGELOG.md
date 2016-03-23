@@ -1,5 +1,8 @@
 Tzispa Utils
 
+## v0.2.1
+- Add string indentation utility
+
 ## v0.2.0
 - Added urlize and transliterate to Tzispa::Utils::String
 - Make Tzispa::Utils::String a subclass of ::String for better usability
