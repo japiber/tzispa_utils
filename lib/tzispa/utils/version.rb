@@ -3,7 +3,7 @@
 module Tzispa
   module Utils
 
-    VERSION  = '0.2.1'
+    VERSION  = '0.2.2'
     NAME     = 'Tzispa Utils'
     GEM_NAME = 'tzispa_utils'
 
