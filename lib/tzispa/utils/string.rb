@@ -87,6 +87,12 @@ module Tzispa
         }
       end
 
+      def length_constraint_wordify(max, word_splitter=' ')
+        ml = 0
+        split(word_splitter).take_while { |s| (ml += s.length + 1) <= max }.join(word_splitter)
+      end
+
+
     end
   end
 end
