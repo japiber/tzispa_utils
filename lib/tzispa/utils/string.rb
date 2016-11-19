@@ -3,7 +3,7 @@ require 'i18n'
 module Tzispa
   module Utils
 
-    class String < ::String
+    refine String do
 
       NAMESPACE_SEPARATOR        = '::'
       CLASSIFY_SEPARATOR         = '_'
@@ -96,5 +96,3 @@ module Tzispa
     end
   end
 end
-
-TzString = Tzispa::Utils::String
