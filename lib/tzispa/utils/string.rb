@@ -10,11 +10,6 @@ module Tzispa
       UNDERSCORE_SEPARATOR       = '/'
       UNDERSCORE_DIVISION_TARGET = '\1_\2'
 
-
-      def self.constantize(str)
-        self.new(str.to_s).constantize
-      end
-
       def constantize
         names = self.split(NAMESPACE_SEPARATOR)
         names.shift if names.empty? || names.first.empty?
@@ -25,20 +20,12 @@ module Tzispa
         constant
       end
 
-      def self.camelize(str)
-        self.new(str.to_s).camelize
-      end
-
       def camelize
         split(CLASSIFY_SEPARATOR).collect{ |w| w.capitalize }.join
       end
 
       def camelize!
         split(CLASSIFY_SEPARATOR).collect!{ |w| w.capitalize }.join
-      end
-
-      def self.underscore(str)
-        self.new(str.to_s).underscore
       end
 
       def underscore
@@ -92,7 +79,25 @@ module Tzispa
         split(word_splitter).take_while { |s| (ml += s.length + 1) <= max }.join(word_splitter)
       end
 
+    end
+
+
+    refine String.singleton_class do
+
+      def underscore(str)
+        String.new(str&.to_s)&.underscore
+      end
+
+      def camelize(str)
+        String.new(str&.to_s)&.camelize
+      end
+
+      def constantize(str)
+        String.new(str&.to_s)&.constantize
+      end
 
     end
+
+
   end
 end
