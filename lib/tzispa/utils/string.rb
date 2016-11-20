@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'i18n'
 
 module Tzispa
@@ -8,6 +10,7 @@ module Tzispa
       NAMESPACE_SEPARATOR        = '::'
       CLASSIFY_SEPARATOR         = '_'
       UNDERSCORE_SEPARATOR       = '/'
+      DOT_SEPARATOR              = '.'
       UNDERSCORE_DIVISION_TARGET = '\1_\2'
 
       def constantize
@@ -26,6 +29,26 @@ module Tzispa
 
       def camelize!
         split(CLASSIFY_SEPARATOR).collect!{ |w| w.capitalize }.join
+      end
+
+      def dottize
+        dup.tap { |s|
+          s.gsub!(NAMESPACE_SEPARATOR, DOT_SEPARATOR)
+          s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
+          s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
+          s.gsub!(/[[:space:]]|\-/, UNDERSCORE_DIVISION_TARGET)
+          s.downcase!
+        }
+      end
+
+      def dottize!
+        tap { |s|
+          s.gsub!(NAMESPACE_SEPARATOR, DOT_SEPARATOR)
+          s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
+          s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
+          s.gsub!(/[[:space:]]|\-/, UNDERSCORE_DIVISION_TARGET)
+          s.downcase!
+        }
       end
 
       def underscore
@@ -90,6 +113,10 @@ module Tzispa
 
       def camelize(str)
         String.new(str&.to_s)&.camelize
+      end
+
+      def dottize(str)
+        String.new(str&.to_s)&.dottize
       end
 
       def constantize(str)
