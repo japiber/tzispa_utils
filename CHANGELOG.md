@@ -1,5 +1,10 @@
 Tzispa Utils
 
+## v0.2.3
+- add dottize methods in string refinement
+- replace TzString class with String refinement
+- Added length_constraint_wordify method in TzString
+
 ## v0.2.2
 - Add string indentation utility
 
