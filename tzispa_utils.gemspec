@@ -1,21 +1,23 @@
 # -*- encoding: utf-8 -*-
 require File.expand_path('../lib/tzispa/utils/version', __FILE__)
 
-Gem::Specification.new do |s|
-  s.name        = Tzispa::Utils::GEM_NAME
-  s.version     = Tzispa::Utils::VERSION
-  s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Juan Antonio Piñero']
-  s.email       = ['japinero@area-integral.com']
-  s.homepage    = 'https://github.com/japiber/tzispa_utils.git'
-  s.summary     = 'Utilities for Tzispa'
-  s.description = 'Utilities for Tzispa'
-  s.licenses    = ['MIT']
+Gem::Specification.new do |spec|
+  spec.name        = Tzispa::Utils::GEM_NAME
+  spec.version     = Tzispa::Utils::VERSION
+  spec.platform    = Gem::Platform::RUBY
+  spec.authors     = ['Juan Antonio Piñero']
+  spec.email       = ['japinero@area-integral.com']
+  spec.homepage    = 'https://github.com/japiber/tzispa_utilspec.git'
+  spec.summary     = 'Utilities for Tzispa'
+  spec.description = 'Utility classes used in Tzispa framework'
+  spec.licenses    = ['MIT']
 
-  s.required_ruby_version     = '~> 2.3'
+  spec.required_ruby_version     = '~> 2.3'
 
-  s.add_dependency 'i18n',      '~> 0.7'
+  spec.add_dependency 'i18n',      '~> 0.7'
 
-  s.files         = Dir.glob("{lib}/**/*") + %w(README.md CHANGELOG.md)
-  s.require_paths = ['lib']
+  spec.add_development_dependency "minitest", "~> 5.0"
+
+  spec.files         = Dir["{lib}/**/*", "{test}/**/*"] + %w(README.md CHANGELOG.md LICENSE Rakefile)
+  spec.require_paths = ['lib']
 end

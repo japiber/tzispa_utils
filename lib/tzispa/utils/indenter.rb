@@ -1,7 +1,10 @@
+require 'tzispa/utils/string'
+
 module Tzispa
   module Utils
 
     class Indenter
+      using Tzispa::Utils
 
       DEFAULT_INDENT_CHAR = ' '
 
@@ -15,7 +18,7 @@ module Tzispa
       end
 
       def <<(str)
-        @instr << self.class.indentize(str, @indent_current, @indent_char)
+        @instr << String.indentize(str, @indent_current, @indent_char)
         self
       end
 
@@ -34,17 +37,6 @@ module Tzispa
         self
       end
 
-      # Indent a string by count chars
-      def self.indentize(str, count, char = ' ')
-        str.gsub(/([^\n]*)(\n|$)/) do |match|
-          last_iteration = ($1 == "" && $2 == "")
-          line = ""
-          line << (char * count) unless last_iteration
-          line << $1
-          line << $2
-          line
-        end
-      end
 
     end
 

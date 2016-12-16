@@ -1,5 +1,5 @@
 module Tzispa
-  module Utility
+  module Utils
 
     require 'tzispa/utils'
 

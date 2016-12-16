@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'i18n'
 
 module Tzispa
@@ -33,11 +31,7 @@ module Tzispa
 
       def dottize
         dup.tap { |s|
-          s.gsub!(NAMESPACE_SEPARATOR, DOT_SEPARATOR)
-          s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
-          s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
-          s.gsub!(/[[:space:]]|\-/, UNDERSCORE_DIVISION_TARGET)
-          s.downcase!
+          s.dottize!
         }
       end
 
@@ -53,11 +47,7 @@ module Tzispa
 
       def underscore
         dup.tap { |s|
-          s.gsub!(NAMESPACE_SEPARATOR, UNDERSCORE_SEPARATOR)
-          s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
-          s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
-          s.gsub!(/[[:space:]]|\-/, UNDERSCORE_DIVISION_TARGET)
-          s.downcase!
+          s.underscore!
         }
       end
 
@@ -71,6 +61,27 @@ module Tzispa
         }
       end
 
+      def indentize(count, char = ' ')
+        dup.tap { |s|
+          s.indentize! count, char
+        }
+      end
+
+      # Indent a string by count chars
+      def indentize!(count, char = ' ')
+        tap { |str|
+          str.gsub!(/([^\n]*)(\n|$)/) do |match|
+            last_iteration = ($1 == "" && $2 == "")
+            line = ""
+            line << (char * count) unless last_iteration
+            line << $1
+            line << $2
+            line
+          end
+        }
+      end
+
+
       # Replace accents in the string using I18n.transliterate
       def transliterate(locale=nil)
         I18n.transliterate(self, ({locale: locale} if locale))
@@ -83,7 +94,7 @@ module Tzispa
       # Options
       #
       # * :downcase => call downcase on the string (defaults to true)
-      # * :convert_spaces => Convert space to underscore (defaults to false)
+      # * :convert_spaces => Convert space to underscore (defaults to true)
       # * :regexp => The regexp matching characters that will be removed (defaults to /[^-_A-Za-z0-9]/)
       def urlize(options = {})
         options[:downcase] ||= true
@@ -102,25 +113,35 @@ module Tzispa
         split(word_splitter).take_while { |s| (ml += s.length + 1) <= max }.join(word_splitter)
       end
 
+
+
     end
 
 
     refine String.singleton_class do
 
       def underscore(str)
-        String.new(str&.to_s)&.underscore
+        String.new(str).underscore
       end
 
       def camelize(str)
-        String.new(str&.to_s)&.camelize
+        String.new(str).camelize
       end
 
       def dottize(str)
-        String.new(str&.to_s)&.dottize
+        String.new(str).dottize
       end
 
       def constantize(str)
-        String.new(str&.to_s)&.constantize
+        String.new(str).constantize
+      end
+
+      def urlize(str)
+        String.new(str).urlize
+      end
+
+      def indentize(str, count, char = ' ')
+        String.new(str).indentize count, char
       end
 
     end
