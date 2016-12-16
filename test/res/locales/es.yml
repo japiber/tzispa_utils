@@ -1,0 +1,28 @@
+---
+es:
+  transliterate:
+    rule:
+      á: a
+      é: e
+      í: i
+      ó: o
+      ú: u
+      Á: A
+      É: E
+      Í: I
+      Ó: O
+      Ú: U
+      ñ: n
+      Ñ: n
+      ä: a
+      ë: e
+      ï: i
+      ö: o
+      ü: u
+      Ä: A
+      Ë: E
+      Ï: I
+      Ö: O
+      Ü: U
+      ç: c
+      Ç: c
