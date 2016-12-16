@@ -1,5 +1,10 @@
 Tzispa Utils
 
+## v0.2.4
+- Remove obsolete / unused code
+- Optimization and bug fixes
+- Added test support with minitest
+
 ## v0.2.3
 - add dottize methods in string refinement
 - replace TzString class with String refinement
