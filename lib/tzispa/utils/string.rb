@@ -3,13 +3,13 @@ require 'i18n'
 module Tzispa
   module Utils
 
-    refine String do
+    NAMESPACE_SEPARATOR        = '::'
+    CLASSIFY_SEPARATOR         = '_'
+    UNDERSCORE_SEPARATOR       = '/'
+    DOT_SEPARATOR              = '.'
+    UNDERSCORE_DIVISION_TARGET = '\1_\2'
 
-      NAMESPACE_SEPARATOR        = '::'
-      CLASSIFY_SEPARATOR         = '_'
-      UNDERSCORE_SEPARATOR       = '/'
-      DOT_SEPARATOR              = '.'
-      UNDERSCORE_DIVISION_TARGET = '\1_\2'
+    refine String do
 
       def constantize
         names = self.split(NAMESPACE_SEPARATOR)
