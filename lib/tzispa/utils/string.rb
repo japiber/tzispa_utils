@@ -1,5 +1,6 @@
 require 'i18n'
 require 'sanitize'
+require 'escape_utils'
 
 module Tzispa
   module Utils
@@ -119,14 +120,32 @@ module Tzispa
         Sanitize.fragment(self, level)
       end
 
+      def escape_html
+        EscapeUtils.escape_html(self)
+      end
+
+      def unescape_html
+        EscapeUtils.unescape_html(self)
+      end
+
     end
 
     module String
 
-      def sanitize_htm(str, level = Sanitize::Config::RELAXED)
+      def sanitize_html(str, level = Sanitize::Config::RELAXED)
         Sanitize.fragment(str, level)
       end
-      alias_method :sanitize_html, :sanitize_htm
+      alias_method :sanitize_htm, :sanitize_html
+
+      def escape_html(str)
+        EscapeUtils.escape_html(str)
+      end
+      alias_method :escape_htm, :escape_html
+
+      def unescape_html(str)
+        EscapeUtils.unescape_html(str)
+      end
+      alias_method :unescape_htm, :unescape_html
 
     end
 
@@ -161,6 +180,15 @@ module Tzispa
       def sanitize_html(str, level = Sanitize::Config::RELAXED)
         String.new(str).sanitize_htm(level)
       end
+
+      def escape_html(str)
+        String.new(str).escape_html
+      end
+
+      def unescape_html(str)
+        String.new(str).unescape_html
+      end
+
 
     end
 
