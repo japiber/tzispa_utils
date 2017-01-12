@@ -1,4 +1,5 @@
 require 'i18n'
+require 'sanitize'
 
 module Tzispa
   module Utils
@@ -8,6 +9,7 @@ module Tzispa
     UNDERSCORE_SEPARATOR       = '/'
     DOT_SEPARATOR              = '.'
     UNDERSCORE_DIVISION_TARGET = '\1_\2'
+
 
     refine String do
 
@@ -113,9 +115,21 @@ module Tzispa
         split(word_splitter).take_while { |s| (ml += s.length + 1) <= max }.join(word_splitter)
       end
 
-
+      def sanitize_html(level = Sanitize::Config::RELAXED)
+        Sanitize.fragment(self, level)
+      end
 
     end
+
+    module String
+
+      def sanitize_htm(str, level = Sanitize::Config::RELAXED)
+        Sanitize.fragment(str, level)
+      end
+      alias_method :sanitize_html, :sanitize_htm
+
+    end
+
 
 
     refine String.singleton_class do
@@ -142,6 +156,10 @@ module Tzispa
 
       def indentize(str, count, char = ' ')
         String.new(str).indentize count, char
+      end
+
+      def sanitize_html(str, level = Sanitize::Config::RELAXED)
+        String.new(str).sanitize_htm(level)
       end
 
     end
