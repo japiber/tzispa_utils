@@ -5,6 +5,7 @@ module Tzispa
     require 'tzispa/utils/decorator'
     require 'tzispa/utils/indenter'
     require 'tzispa/utils/string'
+    require 'tzispa/utils/integer'
 
   end
 end
