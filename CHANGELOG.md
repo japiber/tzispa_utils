@@ -1,5 +1,12 @@
 Tzispa Utils
 
+## v0.3.0
+- remove String module keeping only String refinement
+- added integer refinement
+- added escape and unescape html methods to string refinement
+- added sanitize_html to string refinement
+- more testing implemented
+
 ## v0.2.4
 - Remove obsolete / unused code
 - Optimization and bug fixes
