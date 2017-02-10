@@ -116,39 +116,23 @@ module Tzispa
         split(word_splitter).take_while { |s| (ml += s.length + 1) <= max }.join(word_splitter)
       end
 
-      def sanitize_html(level = Sanitize::Config::RELAXED)
-        Sanitize.fragment(self, level)
+      def sanitize_html(level = nil)
+        level ? Sanitize.fragment(self, level) :
+                Sanitize.fragment(self)
       end
+      alias sanitize_htm sanitize_html
 
       def escape_html
         EscapeUtils.escape_html(self)
       end
+      alias_method :escape_htm, :escape_html
 
       def unescape_html
         EscapeUtils.unescape_html(self)
       end
-
-    end
-
-    module String
-
-      def sanitize_html(str, level = Sanitize::Config::RELAXED)
-        Sanitize.fragment(str, level)
-      end
-      alias_method :sanitize_htm, :sanitize_html
-
-      def escape_html(str)
-        EscapeUtils.escape_html(str)
-      end
-      alias_method :escape_htm, :escape_html
-
-      def unescape_html(str)
-        EscapeUtils.unescape_html(str)
-      end
       alias_method :unescape_htm, :unescape_html
 
     end
-
 
 
     refine String.singleton_class do
@@ -177,18 +161,20 @@ module Tzispa
         String.new(str).indentize count, char
       end
 
-      def sanitize_html(str, level = Sanitize::Config::RELAXED)
-        String.new(str).sanitize_htm(level)
+      def sanitize_html(str, level = nil)
+        String.new(str).santize(level)
       end
+      alias_method :sanitize_htm, :sanitize_html
 
       def escape_html(str)
         String.new(str).escape_html
       end
+      alias_method :escape_htm, :escape_html
 
       def unescape_html(str)
         String.new(str).unescape_html
       end
-
+      alias_method :unescape_htm, :unescape_html
 
     end
 
