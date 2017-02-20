@@ -1,5 +1,8 @@
 Tzispa Utils
 
+## v0.3.1
+- added Hash refinement
+
 ## v0.3.0
 - remove String module keeping only String refinement
 - added integer refinement
