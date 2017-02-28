@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tzispa/utils/duplicable'
 
 module Tzispa
@@ -13,7 +15,6 @@ module Tzispa
     end.freeze
 
     refine Hash do
-
       def symbolize!
         keys.each do |k|
           v = delete(k)
@@ -50,7 +51,6 @@ module Tzispa
           @hash.each { |k, v| result[k] = Duplicable.dup(v, &DUPLICATE_LOGIC) }
         end
       end
-
     end
 
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'i18n'
 require 'sanitize'
 require 'escape_utils'
@@ -11,83 +13,76 @@ module Tzispa
     DOT_SEPARATOR              = '.'
     UNDERSCORE_DIVISION_TARGET = '\1_\2'
 
-
     refine String do
-
       def constantize
-        names = self.split(NAMESPACE_SEPARATOR)
+        names = split(NAMESPACE_SEPARATOR)
         names.shift if names.empty? || names.first.empty?
         constant = Object
         names.each do |name|
-          constant = constant.const_defined?(name) ? constant.const_get(name) : constant.const_missing(name)
+          constant = if constant.const_defined?(name)
+                       constant.const_get(name)
+                     else
+                       constant.const_missing(name)
+                     end
         end
         constant
       end
 
       def camelize
-        split(CLASSIFY_SEPARATOR).collect{ |w| w.capitalize }.join
+        split(CLASSIFY_SEPARATOR).collect(&:capitalize).join
       end
 
       def camelize!
-        split(CLASSIFY_SEPARATOR).collect!{ |w| w.capitalize }.join
+        split(CLASSIFY_SEPARATOR).collect!(&:capitalize).join
       end
 
       def dottize
-        dup.tap { |s|
-          s.dottize!
-        }
+        dup(&:dottize!)
       end
 
       def dottize!
-        tap { |s|
+        tap do |s|
           s.gsub!(NAMESPACE_SEPARATOR, DOT_SEPARATOR)
           s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
           s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
           s.gsub!(/[[:space:]]|\-/, UNDERSCORE_DIVISION_TARGET)
           s.downcase!
-        }
+        end
       end
 
       def underscore
-        dup.tap { |s|
-          s.underscore!
-        }
+        dup(&:underscore!)
       end
 
       def underscore!
-        tap { |s|
+        tap do |s|
           s.gsub!(NAMESPACE_SEPARATOR, UNDERSCORE_SEPARATOR)
           s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
           s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
           s.gsub!(/[[:space:]]|\-/, UNDERSCORE_DIVISION_TARGET)
           s.downcase!
-        }
+        end
       end
 
       def indentize(count, char = ' ')
-        dup.tap { |s|
-          s.indentize! count, char
-        }
+        dup.tap { |s| s.indentize! count, char }
       end
 
       # Indent a string by count chars
       def indentize!(count, char = ' ')
-        tap { |str|
-          str.gsub!(/([^\n]*)(\n|$)/) do |match|
-            last_iteration = ($1 == "" && $2 == "")
-            line = ""
-            line << (char * count) unless last_iteration
-            line << $1
-            line << $2
+        tap do |str|
+          str.gsub!(/([^\n]*)(\n|$)/) do
+            last_iteration = (Regexp.last_match(1) == '' && Regexp.last_match(2) == '')
+            line ||= String.new << (char * count) unless last_iteration
+            line ||= String.new << Regexp.last_match(1) << Regexp.last_match(2)
             line
           end
-        }
+        end
       end
 
-
       # Replace accents in the string using I18n.transliterate
-      def transliterate(locale=nil)
-        I18n.transliterate(self, ({locale: locale} if locale))
+      def transliterate(locale = nil)
+        I18n.transliterate(self, ({ locale: locale } if locale))
       end
 
       # Convert a string to a format suitable for a URL without ever using escaped characters.
@@ -98,29 +93,28 @@ module Tzispa
       #
       # * :downcase => call downcase on the string (defaults to true)
       # * :convert_spaces => Convert space to underscore (defaults to true)
-      # * :regexp => The regexp matching characters that will be removed (defaults to /[^-_A-Za-z0-9]/)
+      # * :regexp => matching characters that will be removed (defaults to /[^-_A-Za-z0-9]/)
       def urlize(options = {})
         options[:downcase] ||= true
         options[:convert_spaces] ||= true
         options[:regexp] ||= /[^-_A-Za-z0-9]/
 
-        transliterate(options[:locale]).strip.tap { |str|
+        transliterate(options[:locale]).strip.tap do |str|
           str.downcase! if options[:downcase]
-          str.gsub!(/\ /,'_') if options[:convert_spaces]
+          str.tr!(' ', '_') if options[:convert_spaces]
           str.gsub!(options[:regexp], '')
-        }
+        end
       end
 
-      def length_constraint_wordify(max, word_splitter=' ')
+      def length_constraint_wordify(max, word_splitter = ' ')
         ml = 0
         split(word_splitter).take_while { |s| (ml += s.length + 1) <= max }.join(word_splitter)
       end
 
       def sanitize_html(level = nil)
-        level ? Sanitize.fragment(self, level) :
-                Sanitize.fragment(self)
+        level ? Sanitize.fragment(self, level) : Sanitize.fragment(self)
       end
-      alias sanitize_htm sanitize_html
+      alias_method :sanitize_htm, :sanitize_html
 
       def escape_html
         EscapeUtils.escape_html(self)
@@ -131,12 +125,9 @@ module Tzispa
         EscapeUtils.unescape_html(self)
       end
       alias_method :unescape_htm, :unescape_html
-
     end
 
-
     refine String.singleton_class do
-
       def underscore(str)
         String.new(str).underscore
       end
@@ -175,9 +166,7 @@ module Tzispa
         String.new(str).unescape_html
       end
       alias_method :unescape_htm, :unescape_html
-
     end
-
 
   end
 end

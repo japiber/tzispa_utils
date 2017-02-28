@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tzispa
   module Utils
     module Duplicable
@@ -12,7 +14,7 @@ module Tzispa
           value.dup
         end
       end
-      
+
     end
   end
 end
