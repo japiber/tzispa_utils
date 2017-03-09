@@ -51,7 +51,7 @@ module Tzispa
       end
 
       def underscore
-        dup(&:underscore!)
+        dup.tap(&:underscore!)
       end
 
       def underscore!
@@ -168,5 +168,50 @@ module Tzispa
       alias_method :unescape_htm, :unescape_html
     end
 
+  end
+end
+
+class TzString
+  class << self
+    using Tzispa::Utils
+
+    def underscore(str)
+      String.new(str).underscore
+    end
+
+    def camelize(str)
+      String.new(str).camelize
+    end
+
+    def dottize(str)
+      String.new(str).dottize
+    end
+
+    def constantize(str)
+      String.new(str).constantize
+    end
+
+    def urlize(str)
+      String.new(str).urlize
+    end
+
+    def indentize(str, count, char = ' ')
+      String.new(str).indentize count, char
+    end
+
+    def sanitize_html(str, level = nil)
+      String.new(str).santize(level)
+    end
+    alias sanitize_htm sanitize_html
+
+    def escape_html(str)
+      String.new(str).escape_html
+    end
+    alias escape_htm escape_html
+
+    def unescape_html(str)
+      String.new(str).unescape_html
+    end
+    alias unescape_htm unescape_html
   end
 end
