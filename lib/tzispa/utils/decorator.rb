@@ -4,12 +4,15 @@ module Tzispa
   module Utils
 
     class Decorator < SimpleDelegator
-      def component
-        @component ||= __getobj__
+      attr_reader :component
+
+      def initialize(component)
+        @component = component
+        super
       end
 
       def cclass
-        component.class
+        @component.class
       end
     end
 
