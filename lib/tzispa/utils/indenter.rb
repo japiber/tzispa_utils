@@ -6,21 +6,23 @@ module Tzispa
   module Utils
 
     class Indenter
-      using Tzispa::Utils
+      using Tzispa::Utils::TzString
 
       DEFAULT_INDENT_CHAR = ' '
+      DEFAULT_INDENT_SIZE = 2
 
       attr_reader :sbuff, :indent_char, :instr
 
-      def initialize(indent_size, indent_char = DEFAULT_INDENT_CHAR)
-        @indent_size = indent_size
+      def initialize(indent_size = nil, indent_char = nil)
+        @indent_size = indent_size || DEFAULT_INDENT_SIZE
         @indent_current = 0
-        @indent_char = indent_char
+        @indent_char = indent_char || DEFAULT_INDENT_CHAR
         @instr = String.new
       end
 
-      def <<(str)
-        @instr << str.indentize(@indent_current, @indent_char)
+      def <<(item)
+        ss = item.to_s.indentize(@indent_current, @indent_char)
+        @instr.concat ss
 
         self
       end
