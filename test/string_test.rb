@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class StringTest < Minitest::Test
-  using Tzispa::Utils
+  using Tzispa::Utils::TzString
 
   @@locales = (I18n.load_path += Dir["test/res/locales/*.yml"])
 

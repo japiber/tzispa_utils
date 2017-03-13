@@ -1,26 +1,22 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class BaseClass
-
   attr_accessor :a, :b
 
   def sum
-    a+b
+    (a + b)
   end
-
 end
 
 class DecoratedClass < Tzispa::Utils::Decorator
-
   def substract
-    b-a
+    (b - a)
   end
-
 end
 
-
 class DecoratorTest < Minitest::Test
-
   def setup
     @base = BaseClass.new
     @base.a = 12

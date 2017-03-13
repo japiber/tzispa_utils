@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class IntegerTest < Minitest::Test
-  using Tzispa::Utils
+  using Tzispa::Utils::TzInteger
 
   def setup
     I18n.enforce_available_locales = false
@@ -12,6 +12,8 @@ class IntegerTest < Minitest::Test
   end
 
   def test_filesize
+    I18n.load_path = nil
+    I18n.default_locale = nil
     assert_equal 8192.to_filesize, '8 KB'
     assert_equal 8192000.to_filesize, '7.8 MB'
     assert_equal 8388608.to_filesize, '8 MB'
