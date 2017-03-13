@@ -1,5 +1,10 @@
 Tzispa Utils
 
+## v0.3.2
+- bug fixes
+- added tests for hash refinements
+- added mail class utility
+
 ## v0.3.1
 - added Hash refinement
 
