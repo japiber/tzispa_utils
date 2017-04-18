@@ -133,6 +133,13 @@ module Tzispa
           EscapeUtils.unescape_html(self)
         end
         alias_method :unescape_htm, :unescape_html
+
+        def to_bool
+          return true if self == true || self =~ /^(true|t|yes|y|1)$/i
+          return false if self == false || self =~ /^(false|f|no|n|0)$/i
+          raise ArgumentError.new("invalid value for Boolean: \"#{self}\"")
+        end
+        alias_method :to_boolean, :to_bool
       end
 
       refine String.singleton_class do
