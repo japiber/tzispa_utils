@@ -22,33 +22,30 @@ module Tzispa
 
         def symbolize!
           keys.each do |k|
-            v = delete(k)
-            self[k.to_sym] = v
+            self[k.to_sym] = delete(k) if k.respond_to? :to_sym
+          end
+
+          self
+        end
+
+        def deep_symbolize!
+          keys.each do |k|
+            ks = k.respond_to?(:to_sym) ? k.to_sym : k
+            self[ks] = delete k # Preserve order even when k == ks
+            self[ks].deep_symbolize! if self[ks].is_a? ::Hash
           end
 
           self
         end
 
         def deep_symbolize
-          dup.tap do |hsh|
-            hsh.keys.each do |k|
-              v = hsh.delete(k)
-              v = v.dup.deep_symbolize if v.respond_to?(:to_hash)
-
-              hsh[k.to_sym] = v
+          dup.tap do |hs|
+            hs.keys.each do |k|
+              ks = k.respond_to?(:to_sym) ? k.to_sym : k
+              hs[ks] = hs.delete k # Preserve order even when k == ks
+              hs[ks] = hs[ks].deep_symbolize if hs[ks].is_a? ::Hash
             end
           end
-        end
-
-        def deep_symbolize!
-          keys.each do |k|
-            v = delete(k)
-            v = v.deep_symbolize! if v.respond_to?(:to_hash)
-
-            self[k.to_sym] = v
-          end
-
-          self
         end
 
         def stringify
@@ -57,10 +54,17 @@ module Tzispa
 
         def stringify!
           keys.each do |k|
-            v = delete(k)
-            v = self.class.new(v).stringify! if v.respond_to?(:to_hash)
+            self[k.to_s] = delete(k) if k.respond_to? :to_s
+          end
 
-            self[k.to_s] = v
+          self
+        end
+
+        def deep_stringify!
+          keys.each do |k|
+            ks = k.respond_to?(:to_s) ? k.to_s : k
+            self[ks] = delete k # Preserve order even when k == ks
+            self[ks].deep_symbolize! if self[ks].is_a? ::Hash
           end
 
           self
