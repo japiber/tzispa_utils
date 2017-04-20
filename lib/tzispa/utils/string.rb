@@ -124,6 +124,10 @@ module Tzispa
         end
         alias_method :sanitize_htm, :sanitize_html
 
+        def sanitize_filename
+          gsub(%r{[\x00\/\\:\*\?\"\,\'<>\|]}, '')
+        end
+
         def escape_html
           EscapeUtils.escape_html(self)
         end
@@ -171,6 +175,10 @@ module Tzispa
           String.new(str).santize(level)
         end
         alias_method :sanitize_htm, :sanitize_html
+
+        def sanitize_filename(str)
+          String.new(str).sanitize_filename
+        end
 
         def escape_html(str)
           String.new(str).escape_html
