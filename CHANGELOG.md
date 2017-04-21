@@ -1,5 +1,9 @@
 Tzispa Utils
 
+## v0.3.3
+- added new string refinement methods: to_bool, sanitize_filename
+- optimizations in hash refinement symbolize methods
+
 ## v0.3.2
 - bug fixes
 - added tests for hash refinements
