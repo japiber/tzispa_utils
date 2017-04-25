@@ -144,6 +144,16 @@ module Tzispa
           raise ArgumentError.new("invalid value for Boolean: \"#{self}\"")
         end
         alias_method :to_boolean, :to_bool
+
+        def integer?(base = 10)
+          Integer(self, base)
+        rescue
+          false
+        end
+
+        def blank?
+          match?(/\A\s*\z/)
+        end
       end
 
       refine String.singleton_class do
@@ -189,6 +199,18 @@ module Tzispa
           String.new(str).unescape_html
         end
         alias_method :unescape_htm, :unescape_html
+
+        def to_bool(str)
+          String.new(str).to_bool
+        end
+
+        def integer?(str, base = 10)
+          String.new(str).integer?(base)
+        end
+
+        def blank?
+          String.new(str).blank?
+        end
       end
 
     end
