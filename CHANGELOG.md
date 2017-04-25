@@ -1,5 +1,8 @@
 Tzispa Utils
 
+## v0.3.4
+- added string refienment methods: integer? blank?
+
 ## v0.3.3
 - added new string refinement methods: to_bool, sanitize_filename
 - optimizations in hash refinement symbolize methods
