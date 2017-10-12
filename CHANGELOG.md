@@ -1,5 +1,9 @@
 Tzispa Utils
 
+## v0.3.5
+- constants autoloading
+- tests fixes
+
 ## v0.3.4
 - added string refienment methods: integer? blank?
 
