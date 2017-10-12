@@ -1,11 +1,14 @@
+# frozen_string_literal: true
+
 module Tzispa
   module Utils
 
-    require 'tzispa/utils/version'
-    require 'tzispa/utils/decorator'
-    require 'tzispa/utils/indenter'
-    require 'tzispa/utils/string'
-    require 'tzispa/utils/integer'
+    autoload :TzString,     'tzispa/utils/tz_string'
+    autoload :TzInteger,    'tzispa/utils/tz_integer'
+    autoload :TzHash,       'tzispa/utils/tz_hash'
+    autoload :Decorator,    'tzispa/utils/decorator'
+    autoload :Indenter,     'tzispa/utils/indenter'
+    autoload :Mail,         'tzispa/utils/mail'
 
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'tzispa/utils/string'
+require 'tzispa/utils/tz_string'
 
 module Tzispa
   module Utils
