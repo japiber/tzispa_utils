@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'tzispa/utils/hash'
 
 class HashTest < Minitest::Test
   using Tzispa::Utils::TzHash
