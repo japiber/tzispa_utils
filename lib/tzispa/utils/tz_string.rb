@@ -13,6 +13,7 @@ module Tzispa
       UNDERSCORE_SEPARATOR       = '/'
       DOT_SEPARATOR              = '.'
       UNDERSCORE_DIVISION_TARGET = '\1_\2'
+      DEFAULT_ENCODING           = 'UTF-8'
 
       refine String do
         def constantize
@@ -30,7 +31,7 @@ module Tzispa
         end
 
         def camelize
-          split(CLASSIFY_SEPARATOR).collect(&:capitalize).join
+          dup.camelize!
         end
 
         def camelize!
@@ -38,13 +39,7 @@ module Tzispa
         end
 
         def dottize
-          dup.tap do |s|
-            s.gsub!(NAMESPACE_SEPARATOR, DOT_SEPARATOR)
-            s.gsub!(/([A-Z\d]+)([A-Z][a-z])/, UNDERSCORE_DIVISION_TARGET)
-            s.gsub!(/([a-z\d])([A-Z])/, UNDERSCORE_DIVISION_TARGET)
-            s.gsub!(/[[:space:]]|\-/, UNDERSCORE_DIVISION_TARGET)
-            s.downcase!
-          end
+          dup.dottize!
         end
 
         def dottize!
@@ -58,7 +53,7 @@ module Tzispa
         end
 
         def underscore
-          dup.tap(&:underscore!)
+          dup.underscore!
         end
 
         def underscore!
@@ -71,20 +66,29 @@ module Tzispa
           end
         end
 
+        def fix_encoding(src_enc, dest_enc = DEFAULT_ENCODING)
+          dup.fix_encoding src_enc, dest_enc
+        end
+
+        def fix_encoding!(src_enc, dest_enc = DEFAULT_ENCODING)
+          tap do |s|
+            s.force_encoding(src_enc).encode(dest_enc)
+          end
+        end
+
         def indentize(count, char = ' ')
-          dup.tap { |str| str.indentize! count, char }
+          dup.indentize!(count, char)
         end
 
         # Indent a string by count chars
         def indentize!(count, char = ' ')
-          gsub!(/([^\n]*)(\n|$)/) do
-            s1 = Regexp.last_match(1)
-            s2 = Regexp.last_match(2)
-            last_iteration = (s1 == '' && s2 == '')
-            line = String.new
-            line << (char * count) unless last_iteration
-            line << s1 << s2
-            line
+          tap do |s|
+            s.gsub!(/([^\n]*)(\n|$)/) do
+              s1 = Regexp.last_match(1)
+              s2 = Regexp.last_match(2)
+              not_empty = s1 != '' || s2 != ''
+              "#{char * count}#{s1}#{s2}" if not_empty
+            end
           end
         end
 
@@ -103,14 +107,14 @@ module Tzispa
         # * :convert_spaces => Convert space to underscore (defaults to true)
         # * :regexp => matching characters that will be removed (defaults to /[^-_A-Za-z0-9]/)
         def urlize(options = {})
-          options[:downcase] ||= true
-          options[:convert_spaces] ||= true
-          options[:regexp] ||= /[^-_A-Za-z0-9]/
-
-          transliterate(options[:locale]).strip.tap do |str|
-            str.downcase! if options[:downcase]
-            str.tr!(' ', '_') if options[:convert_spaces]
-            str.gsub!(options[:regexp], '')
+          downcase = options[:downcase] ||= true
+          convert_spaces = options[:convert_spaces] ||= true
+          regexp = options[:regexp] ||= /[^-_A-Za-z0-9]/
+          locale = options[:locale]
+          transliterate(locale).strip.tap do |str|
+            str.downcase! if downcase
+            str.tr!(' ', '_') if convert_spaces
+            str.gsub!(regexp, '')
           end
         end
 
@@ -147,7 +151,7 @@ module Tzispa
 
         def integer?(base = 10)
           Integer(self, base)
-        rescue
+        rescue StandardError
           false
         end
 
@@ -171,6 +175,10 @@ module Tzispa
 
         def constantize(str)
           String.new(str).constantize
+        end
+
+        def fix_encoding(str, src_enc, dest_enc = DEFAULT_ENCODING)
+          String.new(str).fix_encoding(src_enc, dest_enc)
         end
 
         def urlize(str)
