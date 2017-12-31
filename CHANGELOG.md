@@ -1,5 +1,8 @@
 Tzispa Utils
 
+## v0.3.6
+- added fix_encoding in string refine 
+
 ## v0.3.5
 - constants autoloading
 - tests fixes
